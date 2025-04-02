@@ -18,6 +18,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        scaffoldBackgroundColor: Color(0xFF000000), // Black background
+      ),
       home: Scaffold(
         body: Stack(
           children: [
