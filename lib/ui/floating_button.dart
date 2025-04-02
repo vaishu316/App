@@ -23,10 +23,26 @@ class _FloatingButtonState extends State<FloatingButton> {
             y += details.delta.dy;
           });
         },
-        child: FloatingActionButton(
-          onPressed: widget.onTap,
-          backgroundColor: Color(0xFFFF8C0D), // Orange color
-          child: Icon(Icons.smart_toy, color: Colors.white, size: 28), // AI Assistant Icon
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black38,
+                blurRadius: 8,
+                spreadRadius: 2,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: FloatingActionButton(
+            onPressed: widget.onTap,
+            backgroundColor: Color(0xFFFF9800), // Orange color for contrast
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Icon(Icons.smart_toy, color: Colors.white, size: 28), // Robot icon for AI Assistant
+          ),
         ),
       ),
     );

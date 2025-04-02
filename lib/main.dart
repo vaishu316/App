@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ui/floating_button.dart';
-import 'ui/assistant_panel.dart';
+import 'ui/chat_window.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool showAssistant = false;
+  bool showChat = false;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,8 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         body: Stack(
           children: [
-            if (showAssistant) AssistantPanel(onClose: () => setState(() => showAssistant = false)),
-            FloatingButton(onTap: () => setState(() => showAssistant = true)),
+            if (showChat) ChatWindow(onClose: () => setState(() => showChat = false)),
+            FloatingButton(onTap: () => setState(() => showChat = true)),
           ],
         ),
       ),
