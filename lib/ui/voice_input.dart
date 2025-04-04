@@ -1,38 +1,49 @@
 import 'package:flutter/material.dart';
-///import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class VoiceInput extends StatefulWidget {
-  final Function(String) onResult;
-  const VoiceInput({Key? key, required this.onResult}) : super(key: key);
+class VoiceInputIndicator extends StatelessWidget {
+  final bool isListening;
 
-  @override
-  _VoiceInputState createState() => _VoiceInputState();
-}
-
-class _VoiceInputState extends State<VoiceInput> {
-  stt.SpeechToText speech = stt.SpeechToText();
-  bool isListening = false;
-
-  void startListening() async {
-    bool available = await speech.initialize();
-    if (available) {
-      setState(() => isListening = true);
-      speech.listen(onResult: (result) {
-        widget.onResult(result.recognizedWords);
-      });
-    }
-  }
-
-  void stopListening() {
-    setState(() => isListening = false);
-    speech.stop();
-  }
+  const VoiceInputIndicator({Key? key, required this.isListening}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(isListening ? Icons.mic_off : Icons.mic, color: Colors.red),
-      onPressed: isListening ? stopListening : startListening,
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        margin: EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        decoration: BoxDecoration(
+          color: isListening ? Colors.orangeAccent : Colors.grey[300],
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            if (isListening)
+              BoxShadow(
+                color: Colors.orange.withOpacity(0.5),
+                blurRadius: 20,
+                spreadRadius: 5,
+              ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isListening ? Icons.mic : Icons.mic_none,
+              color: isListening ? Colors.white : Colors.black54,
+            ),
+            SizedBox(width: 10),
+            Text(
+              isListening ? "Listening..." : "Tap the mic to speak",
+              style: TextStyle(
+                fontSize: 16,
+                color: isListening ? Colors.white : Colors.black87,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
+
