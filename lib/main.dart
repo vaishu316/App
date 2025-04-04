@@ -5,11 +5,11 @@ import 'ui/floating_button.dart';
 import 'ui/assistant_panel.dart';
 import 'services/speech_recognition.dart';
 import 'services/text_to_speech.dart';
-import 'services/openai_service.dart';
+import 'services/ai_service.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter initializes first
-  await dotenv.load(fileName: ".env"); // Load API key
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env"); // Loads API key from .env
   runApp(MyApp());
 }
 
@@ -32,13 +32,22 @@ class VoiceAssistantHome extends StatefulWidget {
 
 class _VoiceAssistantHomeState extends State<VoiceAssistantHome> {
   final SpeechService _speechService = SpeechService();
+  String _lastResponse = "";
 
   void _handleVoiceInput(String command) async {
     if (command.trim().isEmpty) return;
 
+    setState(() => _lastResponse = "Thinking...");
     TTSService.speak("Let me think...");
-    final reply = await OpenAIService.sendMessage(command);
-    TTSService.speak(reply);
+
+    try {
+     final reply = await OpenAIService.sendMessage(command);
+      setState(() => _lastResponse = reply);
+      TTSService.speak(reply);
+    } catch (e) {
+      setState(() => _lastResponse = "Sorry, an error occurred.");
+      TTSService.speak("Something went wrong.");
+    }
   }
 
   @override
@@ -52,7 +61,7 @@ class _VoiceAssistantHomeState extends State<VoiceAssistantHome> {
     return Scaffold(
       body: Stack(
         children: [
-          AssistantPanel(),
+          AssistantPanel(response: _lastResponse),
           if (_speechService.isListening)
             Positioned(
               top: 50,
@@ -76,7 +85,7 @@ class _VoiceAssistantHomeState extends State<VoiceAssistantHome> {
               } else {
                 _speechService.startListening();
               }
-              setState(() {}); // Update button state
+              setState(() {});
             },
             isListening: _speechService.isListening,
           ),
